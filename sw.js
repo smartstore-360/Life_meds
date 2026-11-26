@@ -1,14 +1,15 @@
-/* SmartStore 360 — service worker (GitHub Pages copy only).
+/* MediStore 360 — service worker (GitHub Pages copy only).
  * Keeps the app's screens, fonts, icons and PDF tool on the phone so the app
  * opens without internet. It never stores or answers server (Apps Script)
  * requests: sales and data always go to the server, or to the outbox inside
  * the app when offline.
  */
-const VERSION = 'ss360-v3.16';
-const SHELL = ['./', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
+const VERSION = 'ms360-v4.0.1';
+const SHELL = ['./', './manifest.webmanifest', './icon-192.png?v=4', './icon-512.png?v=4', './apple-touch-icon.png?v=4'];
 const CDN = [
   ['https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap', 'no-cors'],
   ['https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css', 'no-cors'],
+  ['https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/webfonts/fa-solid-900.woff2', 'cors'],
   ['https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js', 'cors']
 ];
 const CDN_HOSTS = ['fonts.googleapis.com', 'fonts.gstatic.com', 'cdnjs.cloudflare.com', 'cdn.jsdelivr.net'];
@@ -26,7 +27,8 @@ self.addEventListener('install', event => {
 self.addEventListener('activate', event => {
   event.waitUntil((async () => {
     const keys = await caches.keys();
-    await Promise.all(keys.filter(k => k.startsWith('ss360-') && k !== VERSION).map(k => caches.delete(k)));
+    // Remove older copies, including those saved under the app's previous name (SmartStore 360)
+    await Promise.all(keys.filter(k => (k.startsWith('ss360-') || k.startsWith('ms360-')) && k !== VERSION).map(k => caches.delete(k)));
     await self.clients.claim();
   })());
 });

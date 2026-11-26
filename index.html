@@ -14,7 +14,8 @@
   add('meta', { 'http-equiv': 'Content-Security-Policy', content: "default-src 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; img-src 'self' data: blob:; connect-src https://script.google.com https://script.googleusercontent.com https://accounts.google.com; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'; frame-src 'none'" });
   add('meta', { name: 'referrer', content: 'no-referrer' });
   add('link', { rel: 'manifest', href: 'manifest.webmanifest' });
-  add('link', { rel: 'apple-touch-icon', href: 'apple-touch-icon.png' });
+  add('link', { rel: 'apple-touch-icon', href: 'apple-touch-icon.png?v=4' });
+  add('link', { rel: 'icon', type: 'image/png', href: 'icon-192.png?v=4' });
   add('meta', { name: 'apple-mobile-web-app-capable', content: 'yes' });
   add('meta', { name: 'mobile-web-app-capable', content: 'yes' });
   if (window.top !== window.self) {
@@ -25,14 +26,14 @@
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#111827">
-<title>SmartStore 360</title>
+<title>MediStore 360</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <style>
 /* =========================================================
-   SmartStore 360 — mobile-first UI
+   MediStore 360 — mobile-first UI
    ========================================================= */
 :root{
   --bg:#111827;--bg2:#1f2937;--surface:rgba(31,41,55,.94);--input:#374151;
@@ -50,6 +51,8 @@ body{font-family:'Poppins',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
 body.no-scroll{overflow:hidden}
 .hidden{display:none!important}
 .role-staff .mgr{display:none!important}
+body:not(.role-staff) .staff-only{display:none!important}
+@media(max-width:699px){.role-staff .metrics .m-red{grid-column:1/-1}}
 h2{font-size:1.15rem}h3{font-size:1rem;font-weight:600}h4{font-size:.92rem;font-weight:600}
 .muted{color:var(--muted)}.small{font-size:.82rem}.bold{font-weight:700}.big{font-size:1.2rem}
 .center{text-align:center}.mt{margin-top:1rem}.mb{margin-bottom:.75rem}.ok{color:var(--primary)}.err{color:var(--error)}
@@ -83,7 +86,7 @@ input[type=checkbox]{width:22px;height:22px;min-height:0;accent-color:var(--prim
 .icon-btn{width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:50%;background:transparent;color:var(--text);font-size:1.2rem;cursor:pointer;flex-shrink:0}
 .icon-btn:active{background:rgba(255,255,255,.08)}
 
-/* ---------- login: phone-first, SmartStore 360 design ---------- */
+/* ---------- login: phone-first, MediStore 360 design ---------- */
 .login-view{
   --navy:#0f2a5c;--blue:#1d5fe0;--blue-2:#3b82f6;--yellow:#fbbf24;--sub:#2b3f66;
   --field:#ffffff;--field-b:#cfdcf1;--ph:#7d8fb3;--foot:#1d5fe0;
@@ -354,6 +357,34 @@ table.tbl{width:100%;border-collapse:collapse;font-size:.88rem}
 .mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.78rem}
 .badge{display:inline-block;padding:.18rem .5rem;border-radius:6px;font-size:.75rem;font-weight:600;white-space:nowrap}
 .st-in{background:#065f46;color:#d1fae5}.st-low{background:#854d0e;color:#fef9c3}.st-out{background:#991b1b;color:#fee2e2}
+/* Batches + expiry */
+.pill-batch{display:inline-block;padding:.2rem .65rem;border-radius:20px;font:inherit;font-size:.74rem;font-weight:600;white-space:nowrap;background:rgba(79,70,229,.35);color:#e0e7ff;border:1px solid rgba(129,140,248,.7);cursor:pointer}
+.pill-batch:hover{background:rgba(79,70,229,.55)}
+.exp{display:inline-block;padding:.2rem .65rem;border-radius:20px;font-size:.78rem;font-weight:600;white-space:nowrap;font-variant-numeric:tabular-nums}
+.exp-expired{background:#7f1d1d;color:#fee2e2;border:1px solid #ef4444}
+.exp-soon{background:rgba(234,179,8,.16);color:#fde68a;border:1px solid rgba(234,179,8,.65)}
+.exp-ok{padding-left:0;padding-right:0;font-weight:400}
+.exp-watch{background:rgba(59,130,246,.14);color:#bfdbfe;border:1px solid rgba(59,130,246,.5)}
+/* Expiry stat cards (Inventory + Dashboard) */
+.exp-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem;margin:.2rem 0 1rem}
+@media(min-width:900px){.exp-stats{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.xs{display:block;width:100%;text-align:left;font:inherit;color:inherit;border-radius:var(--radius);padding:.7rem .8rem;border:1px solid rgba(255,255,255,.08);background:rgba(17,24,39,.45);border-left-width:4px;min-width:0}
+button.xs{cursor:pointer}button.xs:hover{background:rgba(31,41,55,.8)}
+.xs.on{outline:2px solid rgba(255,255,255,.55);outline-offset:1px}
+.xs .lbl{font-size:.74rem;color:var(--muted)}
+.xs .val{font-size:1.25rem;font-weight:700;color:#fff;font-variant-numeric:tabular-nums}
+.xs .sub{font-size:.72rem;color:var(--muted);overflow-wrap:anywhere}
+.xs-expired{border-left-color:#ef4444}.xs-expired .val{color:#fca5a5}
+.xs-soon{border-left-color:#eab308}.xs-soon .val{color:#fde68a}
+.xs-watch{border-left-color:#3b82f6}.xs-watch .val{color:#bfdbfe}
+.xs-nodate{border-left-color:#6b7280}
+.sec-h{display:flex;align-items:center;justify-content:space-between;gap:.5rem;margin:.4rem 0 .5rem}
+.li.alert-exp{border-left:4px solid var(--error)}.li.alert-soon{border-left:4px solid #eab308}.li.alert-watch{border-left:4px solid var(--info)}
+.stale-bar{margin:0 0 .8rem;padding:.55rem .8rem;border-radius:10px;background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.45);color:#bfdbfe;font-size:.82rem}
+.batch-row{flex-wrap:wrap}
+.batch-row .s{white-space:normal}
+.batch-row .exp-edit{display:flex;gap:.4rem;align-items:center;width:100%;margin-top:.15rem}
+.batch-row .exp-edit input{flex:1;min-width:0}
 @media(max-width:700px){
   .tbl-wrap{border:0;overflow:visible}
   .tbl.stack thead{display:none}
@@ -445,8 +476,8 @@ table.tbl{width:100%;border-collapse:collapse;font-size:.88rem}
 
   <main class="login-main">
     <div class="brand">
-      <div class="brand-mark" aria-hidden="true"><i class="fas fa-cart-shopping"></i></div>
-      <h1 class="brand-name">SmartStore</h1>
+      <div class="brand-mark" aria-hidden="true"><i class="fas fa-prescription-bottle-medical"></i></div>
+      <h1 class="brand-name">MediStore</h1>
       <span class="brand-360">360</span>
       <p class="brand-tag">Smarter Business Control.</p>
       <p id="loginCompanyName" class="login-company hidden">Welcome!</p>
@@ -472,8 +503,8 @@ table.tbl{width:100%;border-collapse:collapse;font-size:.88rem}
 
   <footer class="login-foot">
     <div class="foot-lines">
-      <!-- <span class="foot-bold">SmartStore 360 &nbsp;•&nbsp; v3.16 &nbsp;•&nbsp; Nov 2026</span> -->
-      <span>© <span id="yr"></span> SmartStore 360</span>
+      <!-- <span class="foot-bold">MediStore 360 &nbsp;•&nbsp; v4.0 &nbsp;•&nbsp; Nov 2026</span> -->
+      <span>© <span id="yr"></span> MediStore 360</span>
     </div>
   </footer>
 </div>
@@ -494,31 +525,37 @@ table.tbl{width:100%;border-collapse:collapse;font-size:.88rem}
   </nav>
 
   <main id="main">
-    <div class="offline-bar" id="offlineBar" role="status">You're offline. You can keep selling: sales are saved on this phone and sent automatically when the connection returns. Other pages need a connection.</div>
+    <div class="offline-bar" id="offlineBar" role="status">You're offline. Keep selling and receiving debt payments: they are saved on this phone and sent automatically when the connection returns. Pages show the last copy saved on this phone; other changes need a connection.</div>
+    <div class="stale-bar hidden" id="staleBar" role="status"></div>
     <!-- Dashboard -->
     <section class="section hidden" data-tab="dashboard">
       <div class="card dash-head">
-        <div><div class="store-name" id="dashStoreName">SmartStore 360</div><div id="welcomeMessage" class="small"></div></div>
+        <div><div class="store-name" id="dashStoreName">MediStore 360</div><div id="welcomeMessage" class="small"></div></div>
         <div class="time-info"><div id="currentDateTime" class="small">—</div><div class="small muted">Last sync <span id="lastSyncTime" class="ok">—</span></div></div>
       </div>
       <div id="storageWarn" class="card warn-box mt hidden" role="alert"></div>
       <div class="metrics m5">
-        <div class="metric m-green"><div class="lbl">Today's Sales</div><div class="val" id="todaySales">—</div><div class="sub" id="todaySalesCount"></div></div>
-        <div class="metric m-blue"><div class="lbl">Inventory Value</div><div class="val" id="inventoryValue">—</div><div class="sub" id="totalItems"></div></div>
+        <div class="metric m-blue staff-only"><div class="lbl">Items</div><div class="val" id="staffItems">—</div><div class="sub" id="staffUnits"></div></div>
+        <div class="metric m-green mgr"><div class="lbl">Today's Sales</div><div class="val" id="todaySales">—</div><div class="sub" id="todaySalesCount"></div></div>
+        <div class="metric m-blue mgr"><div class="lbl">Inventory Value</div><div class="val" id="inventoryValue">—</div><div class="sub" id="totalItems"></div></div>
         <div class="metric m-orange"><div class="lbl">Low Stock</div><div class="val" id="lowStockCount">—</div><div class="sub">need restocking</div></div>
         <div class="metric m-red"><div class="lbl">Out of Stock</div><div class="val" id="outOfStockCount">—</div><div class="sub">urgent</div></div>
-        <div class="metric m-purple m-span"><div class="lbl">Net Profit (month)</div><div class="val" id="netProfit">—</div><div class="sub" id="profitMargin"></div></div>
+        <div class="metric m-purple m-span mgr"><div class="lbl">Net Profit (month)</div><div class="val" id="netProfit">—</div><div class="sub" id="profitMargin"></div></div>
       </div>
+      <div class="sec-h"><h3>Expiry</h3><span class="small muted" id="dashExpNote"></span></div>
+      <div class="exp-stats" id="dashExpStats"></div>
       <div class="quick">
         <button class="btn" data-go="sales"><i class="fas fa-cart-plus"></i>New Sale</button>
-        <button class="btn" data-go="inventory"><i class="fas fa-boxes-stacked"></i>Inventory</button>
-        <button class="btn" data-go="reports"><i class="fas fa-chart-column"></i>Reports</button>
+        <button class="btn mgr" data-go="inventory"><i class="fas fa-boxes-stacked"></i>Inventory</button>
+        <button class="btn mgr" data-go="reports"><i class="fas fa-chart-column"></i>Reports</button>
+        <button class="btn staff-only" data-go="debtors"><i class="fas fa-wallet"></i>Debtors</button>
         <button class="btn" id="refreshDashboard"><i class="fas fa-rotate"></i>Refresh</button>
       </div>
       <div class="grid-2">
-        <div class="card"><h3>Today's Sales <span class="muted small">· tap for receipt</span></h3><div id="recentSales" class="list"></div></div>
+        <div class="card"><h3>Expiry Alerts <span class="muted small">· tap to see batches</span></h3><div id="dashExpiring" class="list"></div></div>
         <div class="card"><h3>Stock Alerts</h3><div id="stockAlerts" class="list"></div></div>
-        <div class="card">
+        <div class="card mgr"><h3>Today's Sales <span class="muted small">· tap for receipt</span></h3><div id="recentSales" class="list"></div></div>
+        <div class="card mgr">
           <h3>Performance</h3>
           <div class="mt">
             <div class="kv"><span class="muted">This week</span><b id="weeklySales">—</b></div>
@@ -531,7 +568,7 @@ table.tbl{width:100%;border-collapse:collapse;font-size:.88rem}
             <div class="kv"><span class="muted">Stock turnover (month)</span><b id="turnoverRate">—</b></div>
           </div>
         </div>
-        <div class="card"><h3>Top 5 Items (month)</h3><div id="topSellingItems" class="list"></div></div>
+        <div class="card mgr"><h3>Top 5 Items (month)</h3><div id="topSellingItems" class="list"></div></div>
       </div>
     </section>
 
@@ -576,10 +613,12 @@ table.tbl{width:100%;border-collapse:collapse;font-size:.88rem}
 
     <!-- Inventory -->
     <section class="section hidden" data-tab="inventory">
+      <div class="sec-h"><h3>Expiry</h3><span class="small muted" id="invExpNote"></span></div>
+      <div class="exp-stats" id="invExpStats"></div>
       <div class="card">
         <div class="toolbar">
           <input id="inventorySearch" type="search" placeholder="Search items…" enterkeyhint="search" aria-label="Search items">
-          <select id="statusFilter" aria-label="Filter by status"><option value="All">All status</option><option>In Stock</option><option>Low Stock</option><option>Out of Stock</option></select>
+          <select id="statusFilter" aria-label="Filter by status"><option value="All">All status</option><option>In Stock</option><option>Low Stock</option><option>Out of Stock</option><option value="Expired">Expired</option><option value="Expiring Soon">Expiring in 30 days</option><option value="Expiring Later">Expiring in 31–90 days</option><option value="No Expiry">No expiry date</option></select>
         </div>
         <div class="actions-scroll">
           <button id="addInventoryButton" class="btn btn-primary btn-sm"><i class="fa-solid fa-plus"></i>Add / Receive</button>
@@ -590,7 +629,7 @@ table.tbl{width:100%;border-collapse:collapse;font-size:.88rem}
         </div>
         <div class="row-between small muted mb"><span id="rowCount">Loading…</span><span id="selectedHint">Tap an item to select it</span></div>
         <div class="tbl-wrap"><table class="tbl stack selectable" id="inventoryTable">
-          <thead><tr><th>Name</th><th class="num">Stock</th><th class="num">Avg cost</th><th class="num">Price</th><th>Purchased</th><th class="num">Reorder</th><th>Status</th></tr></thead>
+          <thead><tr><th>Name</th><th class="num">Stock</th><th>Batches</th><th>Expiry</th><th class="num">Avg cost</th><th class="num">Price</th><th class="num">Reorder</th><th>Status</th></tr></thead>
           <tbody id="inventoryTableBody"></tbody></table></div>
         <div class="pager" id="inventoryPagination"></div>
       </div>
@@ -722,7 +761,9 @@ table.tbl{width:100%;border-collapse:collapse;font-size:.88rem}
     <label class="field"><span>Selling price (GHC)</span><input id="addPrice" type="number" inputmode="decimal" step="0.01" min="0.01" required></label>
     <p id="addCostHint" class="small span-2 err hidden" style="margin-top:-.35rem"></p>
     <label class="field"><span>Reorder level</span><input id="addReorderLevel" type="number" inputmode="numeric" min="0" step="1" required></label>
-    <label class="field span-2"><span>Purchase date</span><input id="addPurchaseDate" type="date"></label>
+    <label class="field"><span>Purchase date</span><input id="addPurchaseDate" type="date"></label>
+    <label class="field"><span>Expiry date (optional)</span><input id="addExpiryDate" type="date"></label>
+    <p class="small span-2 muted" style="margin-top:-.35rem">This delivery is saved as its own batch with this expiry date.</p>
     <div class="modal-foot span-2"><button type="button" class="btn btn-ghost" data-close>Cancel</button><button type="submit" class="btn btn-primary">Save</button></div>
   </form>
 </div></div>
@@ -740,14 +781,22 @@ table.tbl{width:100%;border-collapse:collapse;font-size:.88rem}
     <p id="editCostHint" class="small span-2 err hidden" style="margin-top:-.35rem"></p>
     <label class="field"><span>Reorder level</span><input id="editReorderLevel" type="number" inputmode="numeric" min="0" step="1"></label>
     <label class="field"><span>Purchase date</span><input id="editPurchaseDate" type="date"></label>
+    <label class="field span-2"><span>Expiry date of added stock (optional)</span><input id="editExpiryDate" type="date"></label>
     <label class="field span-2"><span id="editReasonLabel">Reason (required when removing stock)</span><input id="editReason" maxlength="150" placeholder="e.g. Damaged, expired, new delivery"></label>
     <div class="modal-foot span-2"><button type="button" class="btn btn-ghost" data-close>Cancel</button><button type="submit" class="btn btn-primary">Update</button></div>
   </form>
 </div></div>
 
+<div id="batchModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="batchTitle"><div class="modal-box">
+  <div class="modal-head"><h2 id="batchTitle">Batches</h2><button class="icon-btn" data-close aria-label="Close"><i class="fa-solid fa-xmark"></i></button></div>
+  <p id="batchMeta" class="small muted"></p>
+  <div id="batchList" class="list"></div>
+  <div class="modal-foot"><button type="button" class="btn btn-ghost" data-close>Close</button></div>
+</div></div>
+
 <div id="bulkModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="bulkTitle"><div class="modal-box">
   <div class="modal-head"><h2 id="bulkTitle">Bulk upload (CSV)</h2><button class="icon-btn" data-close aria-label="Close"><i class="fa-solid fa-xmark"></i></button></div>
-  <p class="muted small">Columns: <b>Name, Stock, Cost, Price, PurchaseDate (YYYY-MM-DD), ReorderLevel</b>. First row is a header. Price must be more than 0 and not below Cost. Existing items receive the stock as a new batch.</p>
+  <p class="muted small">Columns: <b>Name, Stock, Cost, Price, PurchaseDate (YYYY-MM-DD), ReorderLevel, ExpiryDate (YYYY-MM-DD, optional)</b>. First row is a header. Each row becomes its own batch. Price must be more than 0 and not below Cost. Existing items receive the stock as a new batch.</p>
   <button type="button" id="csvTemplateBtn" class="btn btn-ghost btn-sm mt"><i class="fa-solid fa-file-arrow-down"></i>Download template</button>
   <form id="bulkUploadForm" class="mt" novalidate>
     <input id="bulkUploadFile" type="file" accept=".csv,text/csv">
@@ -829,7 +878,7 @@ table.tbl{width:100%;border-collapse:collapse;font-size:.88rem}
       <span class="r-pay" id="rcptPayment"></span>
       <div class="r-cust hidden" id="rcptCustomer"></div>
       <div class="r-archived hidden" id="rcptArchived">Archived sale</div>
-      <div class="r-foot"><b id="rcptCompanyFooter"></b><div>Thank you for your business!</div><div>Powered by SmartStore 360</div></div>
+      <div class="r-foot"><b id="rcptCompanyFooter"></b><div>Thank you for your business!</div><div>Powered by MediStore 360</div></div>
     </div>
     <div class="receipt-actions">
       <button class="btn b-share" id="rcptShare"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true" style="width:18px;height:18px"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5M12 17v-6M9.5 13.5 12 11l2.5 2.5"/></svg>Share PDF</button>
@@ -941,7 +990,7 @@ document.addEventListener('visibilitychange', () => { if (!document.hidden) Idle
    • Hosted elsewhere (e.g. GitHub Pages) → calls the same backend over
      HTTPS. Paste your Apps Script web-app URL (ends in /exec) below.
    --------------------------------------------------------- */
-const API_URL = 'https://script.google.com/macros/s/AKfycbwN0cl3CE1JNxTdO05zTZvp-VFz353GuxmGBDKEnf6Tkkvb8WbQzJBEYM-B-AaYjnag/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbxUA09oJKPzW7j4WrMw_Hz7eUVMfFWjFjCWiA8olWSLuBme_g9ZMnBFHK284VDptQlT/exec';
 const hasGAS = !!(window.google && google.script && google.script.run);
 const API_OK = /^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(API_URL);
 
@@ -1030,7 +1079,23 @@ function api(method) {
     runner[method].apply(runner, args);
   });
 }
-const call = function (method) { return api.apply(null, [method, S.token].concat(Array.prototype.slice.call(arguments, 1))); };
+/* Read-only calls whose last answer is kept (encrypted) on this phone, so the page still opens offline. */
+const READ_CACHE = new Set(['getDashboardData', 'getStaffDashboard', 'getInventoryData', 'getItemBatches', 'getDebtors', 'getDebtorDetail',
+  'getExpenses', 'generateReport', 'getAllUsers', 'getCompanySettings', 'getReceiptData', 'getPaymentReceipt', 'getRecentTransactions',
+  'findSaleById', 'getTodaysSalesBreakdown', 'getMaintenanceStatus']);
+const call = function (method) {
+  const args = Array.prototype.slice.call(arguments, 1);
+  const p = api.apply(null, [method, S.token].concat(args));
+  if (!READ_CACHE.has(method)) return p;
+  const vk = method + ':' + JSON.stringify(args);
+  return p.then(res => { Vault.put(vk, res); return res; }, async e => {
+    if (e.code !== 'NETWORK' && e.code !== 'CONFIG') throw e;   // the server answered: never hide a real refusal
+    const hit = await Vault.get(vk);
+    if (!hit) throw e;
+    Stale.show(hit.at);
+    return Object.assign({}, hit.data, { _cachedAt: hit.at });
+  });
+};
 const isMgr = () => !!(S.user && S.user.role === 'Manager');
 
 /* =========================================================
@@ -1080,6 +1145,11 @@ const DB = {
   put(k, v) { return this.tx('kv', 'readwrite', s => s.put(v, k)); },
   del(k) { return this.tx('kv', 'readwrite', s => s.delete(k)); },
   qAll() { return this.tx('queue', 'readonly', s => s.getAll()); },
+  /** [keys, values] of kv entries whose key starts with prefix. */
+  async range(prefix) {
+    const r = IDBKeyRange.bound(prefix, prefix + '\uffff');
+    return [await this.tx('kv', 'readonly', s => s.getAllKeys(r)), await this.tx('kv', 'readonly', s => s.getAll(r))];
+  },
   qPut(it) { return this.tx('queue', 'readwrite', s => s.put(it)); },
   qDel(ref) { return this.tx('queue', 'readwrite', s => s.delete(ref)); }
 };
@@ -1134,7 +1204,80 @@ const Cred = {
         return { error: 'bad' };
       }
     } catch (e) { return { error: 'none' }; }
-  }
+  },
+  /** Opens this user's saved session with the password WITHOUT counting failures (used right after an online sign-in). */
+  async peek(user, pw) {
+    if (!this.ok()) return null;
+    try {
+      const rec = await DB.get('cred:' + user.toLowerCase());
+      if (!rec) return null;
+      const pt = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: rec.iv }, await this.key(pw, rec.salt), rec.ct);
+      return JSON.parse(new TextDecoder().decode(pt));
+    } catch (e) { return null; }
+  },
+  newKey() { const b = crypto.getRandomValues(new Uint8Array(32)); let s = ''; b.forEach(x => { s += String.fromCharCode(x); }); return btoa(s); }
+};
+
+/* Vault: the last answer of each read-only page, kept on this phone ENCRYPTED (AES-GCM) with a random
+   per-user key. That key is stored only inside the password-protected offline session (Cred) and in
+   this tab's session storage, so another person using the phone can't read a manager's figures.
+   Old copies are pruned (30 days, at most 400 per user). */
+const Vault = {
+  key: null, user: '', ready: null, _done: null, TTL: 30 * 86400000, MAX: 400,
+  begin(user) { this.key = null; this.user = String(user || '').toLowerCase(); this.ready = new Promise(r => { this._done = r; }); },
+  async setKey(b64) {
+    try {
+      if (!b64 || !Cred.ok()) throw new Error('no key');
+      const raw = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+      this.key = await crypto.subtle.importKey('raw', raw, 'AES-GCM', false, ['encrypt', 'decrypt']);
+    } catch (e) { this.key = null; }
+    if (this._done) this._done();
+    if (this.key) setTimeout(() => this.prune(), 5000);
+  },
+  async wait() {
+    if (!this.ready) return false;
+    await Promise.race([this.ready, new Promise(r => setTimeout(r, 20000))]);
+    return !!this.key;
+  },
+  async put(name, data) {
+    if (!await this.wait()) return;
+    const user = this.user, key = this.key;
+    try {
+      const iv = crypto.getRandomValues(new Uint8Array(12));
+      const ct = await crypto.subtle.encrypt({ name: 'AES-GCM', iv: iv }, key, new TextEncoder().encode(JSON.stringify(data)));
+      if (this.user === user) await DB.put('v:' + user + ':' + name, { iv: iv, ct: ct, at: Date.now() });
+    } catch (e) { /* storage full or blocked: the page just won't open offline */ }
+  },
+  async get(name) {
+    if (!await this.wait()) return null;
+    try {
+      const rec = await DB.get('v:' + this.user + ':' + name);
+      if (!rec) return null;
+      const pt = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: rec.iv }, this.key, rec.ct);
+      return { data: JSON.parse(new TextDecoder().decode(pt)), at: rec.at };
+    } catch (e) { return null; }
+  },
+  async prune() {
+    if (!this.key || !this.user) return;
+    try {
+      const kv = await DB.range('v:' + this.user + ':'), keys = kv[0], vals = kv[1], now = Date.now();
+      const list = keys.map((k, i) => ({ k: k, at: (vals[i] && vals[i].at) || 0 })).sort((a, b) => b.at - a.at);
+      const drop = list.filter((x, i) => i >= this.MAX || now - x.at > this.TTL);
+      for (const x of drop) await DB.del(x.k);
+    } catch (e) { /* ignore */ }
+  },
+  clear() { if (this._done) this._done(); this.key = null; this.user = ''; this.ready = null; this._done = null; }
+};
+
+/** Shown at the top of a page that is displaying a saved (offline) copy. */
+const Stale = {
+  show(at) {
+    const b = $('staleBar'); if (!b) return;
+    b.textContent = 'No connection — showing the copy saved on this phone ' +
+      new Date(at).toLocaleString([], { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) + '. It may be out of date.';
+    b.classList.remove('hidden');
+  },
+  hide() { const b = $('staleBar'); if (b) b.classList.add('hidden'); }
 };
 
 const Outbox = {
@@ -1148,10 +1291,19 @@ const Outbox = {
   /** Units of an item in sales not yet on the server (all users of this phone). */
   qty(lname) {
     let n = 0;
-    this.items.forEach(it => (it.sale.items || []).forEach(l => { if (String(l.itemName).toLowerCase() === lname) n += Number(l.quantity) || 0; }));
+    this.items.forEach(it => ((it.sale && it.sale.items) || []).forEach(l => { if (String(l.itemName).toLowerCase() === lname) n += Number(l.quantity) || 0; }));
     return n;
   },
-  total(it) { return Math.round((it.sale.items || []).reduce((s, l) => s + l.quantity * l.unitPrice, 0) * 100) / 100; },
+  total(it) { return it.pay ? Number(it.pay.amount) || 0 : Math.round((it.sale.items || []).reduce((s, l) => s + l.quantity * l.unitPrice, 0) * 100) / 100; },
+  /** A debt payment received while offline: sent like a sale (the server recognises a resend by its ref). */
+  async addPayment(pay, meta) {
+    const it = { kind: 'pay', ref: pay.clientRef, user: this.me(), by: S.user.username, at: Date.now(), status: 'pending', lastTry: 0, tries: 0, pay: pay, meta: meta || {} };
+    await DB.qPut(it);
+    this.items = this.items.filter(x => x.ref !== it.ref).concat([it]); this.paint();
+    return it;
+  },
+  /** Amount of unsent payments for one customer (shown as already paid on the Debtors page). */
+  paidPending(key) { let n = 0; this.items.forEach(it => { if (it.pay && it.pay.customerKey === key && it.status !== 'failed') n += Number(it.pay.amount) || 0; }); return Math.round(n * 100) / 100; },
   async add(sale) {
     const it = { ref: sale.clientRef, user: this.me(), by: S.user.username, at: Date.now(), status: 'sending', lastTry: Date.now(), tries: 1, sale: sale };
     await DB.qPut(it);
@@ -1163,7 +1315,7 @@ const Outbox = {
   async sync(onlyRef) {
     if (this.syncing || !S.token || !this.items.length) return;
     this.syncing = true;
-    let sent = 0, failed = 0;
+    let sent = 0, failed = 0, paid = 0;
     try {
       await this.load();   // other tabs may have sent or added sales
       const list = this.mine().filter(i => !this.inflight.has(i.ref) && (onlyRef ? i.ref === onlyRef
@@ -1173,7 +1325,7 @@ const Outbox = {
         await this.set(it, { status: 'sending', lastTry: Date.now(), tries: (it.tries || 0) + 1 });
         this.inflight.add(it.ref);
         try {
-          await call('submitSaleData', it.sale);
+          if (it.pay) { await call('recordCreditPayment', it.pay); paid++; } else await call('submitSaleData', it.sale);
           await this.remove(it.ref); sent++;
         } catch (e) {
           if (['NETWORK', 'BUSY', 'AUTH', 'CONFIG'].indexOf(e.code) >= 0) { await this.set(it, { status: 'pending' }); break; }
@@ -1181,8 +1333,8 @@ const Outbox = {
         } finally { this.inflight.delete(it.ref); }
       }
     } finally { this.syncing = false; }
-    if (sent) { toast(sent + (sent === 1 ? ' saved sale was' : ' saved sales were') + ' sent to the server'); Inv.fetch(true).catch(() => {}); }
-    if (failed) toast(failed + (failed === 1 ? ' saved sale needs' : ' saved sales need') + ' attention. Tap the red badge at the top.', 'error');
+    if (sent) { toast(sent + (sent === 1 ? ' saved item was' : ' saved items were') + ' sent to the server'); if (sent > paid) Inv.fetch(true).catch(() => {}); if (paid && S.tab === 'debtors') Debt.load(); }
+    if (failed) toast(failed + (failed === 1 ? ' saved item needs' : ' saved items need') + ' attention. Tap the red badge at the top.', 'error');
     if (!$('outboxModal').classList.contains('hidden')) this.renderList();
   },
   paint() {
@@ -1201,7 +1353,7 @@ const Outbox = {
     const lo = $('loginOutbox');
     if (lo) {
       const n = this.items.length;
-      lo.textContent = n ? n + (n === 1 ? ' sale is' : ' sales are') + ' saved on this phone and waiting to be sent. Each one is sent when the person who made it signs in.' : '';
+      lo.textContent = n ? n + (n === 1 ? ' sale or payment is' : ' sales/payments are') + ' saved on this phone and waiting to be sent. Each one is sent when the person who made it signs in.' : '';
       lo.classList.toggle('hidden', !n || !!S.token);
     }
   },
@@ -1210,10 +1362,11 @@ const Outbox = {
     const body = clear($('outboxBody')), mine = this.mine(), others = {};
     this.items.forEach(i => { if (i.user !== this.me()) others[i.by] = (others[i.by] || 0) + 1; });
     $('outboxIntro').textContent = !Net.online
-      ? 'You are offline. These sales are saved on this phone and will be sent automatically when the connection returns.'
-      : 'These sales are saved on this phone. They are sent automatically; tap Send now to try straight away.';
-    if (!mine.length) body.appendChild(el('div', { class: 'empty', text: 'Nothing waiting. All your sales have been sent.' }));
+      ? 'You are offline. These sales and payments are saved on this phone and will be sent automatically when the connection returns.'
+      : 'These sales and payments are saved on this phone. They are sent automatically; tap Send now to try straight away.';
+    if (!mine.length) body.appendChild(el('div', { class: 'empty', text: 'Nothing waiting. Everything has been sent.' }));
     mine.forEach(it => {
+      if (it.pay) { body.appendChild(this.payItem(it)); return; }
       const s = it.sale, bad = it.status === 'failed';
       const when = new Date(it.at).toLocaleString([], { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
       const box = el('div', { class: 'ob-item' },
@@ -1232,10 +1385,29 @@ const Outbox = {
       body.appendChild(box);
     });
     Object.keys(others).forEach(name => body.appendChild(el('p', { class: 'small muted mt',
-      text: others[name] + (others[name] === 1 ? ' sale' : ' sales') + ' by ' + name + ' will be sent when ' + name + ' signs in on this phone.' })));
+      text: others[name] + (others[name] === 1 ? ' item' : ' items') + ' by ' + name + ' will be sent when ' + name + ' signs in on this phone.' })));
     $('outboxSend').disabled = !mine.some(i => i.status !== 'failed') || !S.token;
   },
+  payItem(it) {
+    const p = it.pay, bad = it.status === 'failed', m = it.meta || {};
+    const when = new Date(it.at).toLocaleString([], { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+    const box = el('div', { class: 'ob-item' },
+      el('div', { class: 'row-between' }, el('b', { text: money(p.amount) + ' · ' + p.method + ' · debt payment' }),
+        el('span', { class: 'st' + (bad ? ' bad' : ''), text: bad ? 'Not accepted' : it.status === 'sending' ? 'Sending…' : 'Waiting' })),
+      el('div', { class: 'small muted', text: when + ' · from ' + custLabel(m.name, m.phone) }));
+    if (bad) {
+      box.appendChild(el('div', { class: 'err', text: 'The server refused this payment: ' + (it.error || 'unknown reason') }));
+      box.appendChild(el('div', { class: 'btn-row mt' },
+        el('button', { type: 'button', class: 'btn btn-primary btn-sm', onclick: () => this.sync(it.ref) }, 'Try again'),
+        el('button', { type: 'button', class: 'btn btn-danger btn-sm', onclick: () => this.discard(it) }, 'Remove')));
+    }
+    return box;
+  },
   async discard(it) {
+    if (it.pay) {
+      if (!await confirmBox('Remove this payment?', 'It will be deleted from this phone and will NOT be recorded. The customer will still owe this amount.', 'Remove payment', true)) return;
+      await this.remove(it.ref); this.renderList(); toast('Payment removed from this phone'); return;
+    }
     const ok = await confirmBox('Remove this sale?', 'It will be deleted from this phone and will NOT be recorded. Only do this if it was a mistake, or if you will enter it again correctly. The stock it used is not affected.', 'Remove sale', true);
     if (!ok) return;
     await this.remove(it.ref); Inv.move(it.sale, +1); Inv.fetch(true).catch(() => {}); this.renderList(); toast('Sale removed from this phone');
@@ -1393,16 +1565,16 @@ const salesSource = makeInvSource(true);
    Branding
    ========================================================= */
 const Brand = {
-  s: { companyName: 'SmartStore 360', address: '', phone: '' },
+  s: { companyName: 'MediStore 360', address: '', phone: '' },
   apply(s) {
     if (!s) return;
     this.s = Object.assign({}, this.s, s);
-    const name = this.s.companyName || 'SmartStore 360';
+    const name = this.s.companyName || 'MediStore 360';
     $('loginCompanyName').textContent = name;
-    $('loginCompanyName').classList.toggle('hidden', name === 'SmartStore 360');
+    $('loginCompanyName').classList.toggle('hidden', name === 'MediStore 360');
     $('headerCompanyName').textContent = name;
     $('dashStoreName').textContent = name;
-    document.title = name === 'SmartStore 360' ? name : name + ' — SmartStore 360';
+    document.title = name === 'MediStore 360' ? name : name + ' — MediStore 360';
   },
   async load() { try { const r = await call('getCompanySettings'); this.apply(r.settings); } catch (e) { /* non-fatal */ } }
 };
@@ -1430,7 +1602,7 @@ function svgIcon(name) {
   return s;
 }
 const TABS = [
-  { id: 'dashboard', label: 'Dashboard', icon: 'home', mgr: true, b: 'Dashboard' },
+  { id: 'dashboard', label: 'Dashboard', icon: 'home', b: 'Dashboard' },
   { id: 'sales', label: 'Sales', icon: 'cart', b: 'Sales' },
   { id: 'inventory', label: 'Inventory', icon: 'box', mgr: true, b: 'Inventory' },
   { id: 'reports', label: 'Reports', icon: 'chart', mgr: true, b: 'Reports' },
@@ -1486,7 +1658,8 @@ const Nav = {
   closeDrawer() { $('drawer').classList.remove('open'); $('overlay').classList.add('hidden'); $('menuToggle').setAttribute('aria-expanded', 'false'); },
   show(id, force) {
     refreshToday();
-    if (!this.allowed().some(t => t.id === id)) id = isMgr() ? 'dashboard' : 'sales';
+    if (!this.allowed().some(t => t.id === id)) id = 'dashboard';
+    Stale.hide();
     qsa('.section').forEach(s => s.classList.toggle('hidden', s.dataset.tab !== id));
     qsa('[data-tab]', $('drawerNav')).concat(qsa('[data-tab]', $('bnav')), qsa('[data-tab]', $('moreGrid'))).forEach(b => b.classList.toggle('active', b.dataset.tab === id));
     this.barReveal(id);
@@ -1524,52 +1697,71 @@ document.addEventListener('visibilitychange', () => { if (document.hidden) Clock
    Dashboard (one server round-trip)
    ========================================================= */
 const Dash = {
+  /** Managers: sales, profit, stock and expiry. Staff: stock and expiry only (no money figures). */
   async load() {
     $('welcomeMessage').textContent = 'Welcome, ' + S.user.username;
-    if (!$('recentSales').childElementCount) $('recentSales').appendChild(el('div', { class: 'empty', text: 'Loading…' }));
+    if (!$('dashExpiring').childElementCount) $('dashExpiring').appendChild(el('div', { class: 'empty', text: 'Loading…' }));
+    const mgr = isMgr();
     try {
-      const d = await call('getDashboardData');
-      if (d.today && d.today > S.today) { S.today = d.today; Sales.resetDate(); }   // server's calendar wins
-      $('todaySales').textContent = money(d.todaySales);
-      $('todaySalesCount').textContent = d.todayTransactions + ' transaction' + (d.todayTransactions === 1 ? '' : 's') + (d.todayCredit > 0 ? ' · ' + money(d.todayCredit) + ' on credit' : '');
-      $('inventoryValue').textContent = money(d.inventoryValue);
-      $('totalItems').textContent = num(d.itemCount) + ' items';
-      $('lowStockCount').textContent = num(d.lowStock);
-      $('outOfStockCount').textContent = num(d.outOfStock);
-      $('netProfit').textContent = money(d.netProfit);
-      $('profitMargin').textContent = d.profitMargin.toFixed(1) + '% margin · after expenses';
-      $('weeklySales').textContent = money(d.weekSales);
-      $('monthlySales').textContent = money(d.monthSales);
-      $('monthGross').textContent = money(d.monthGrossProfit);
-      $('monthExpenses').textContent = money(d.monthExpenses);
-      $('monthStockBought').textContent = money(d.monthStockPurchases || 0);
-      $('turnoverRate').textContent = d.stockTurnover.toFixed(1) + '%';
-      $('dashOwed').textContent = money(d.totalOwed || 0) + (d.debtorCount ? ' (' + d.debtorCount + ')' : '');
-      $('dashRepaid').textContent = money(d.todayRepaid || 0);
-      $('lastSyncTime').textContent = new Date(d.syncedAt).toLocaleTimeString();
-      const sw = $('storageWarn');
-      sw.classList.toggle('hidden', !(d.storagePct >= 80));
-      if (d.storagePct >= 80) sw.textContent = 'The spreadsheet is ' + d.storagePct + '% full (Google allows 10 million cells). Go to Settings → Data maintenance and tap "Run maintenance now". If it stays high, contact your administrator.';
+      const d = await call(mgr ? 'getDashboardData' : 'getStaffDashboard');
+      if (!d._cachedAt && d.today && d.today > S.today) { S.today = d.today; Sales.resetDate(); }   // server's calendar wins
+      this.common(d, mgr);
+      if (mgr) this.manager(d);
+      else {
+        $('staffItems').textContent = num(d.itemCount);
+        $('staffUnits').textContent = num(d.units) + ' units in stock';
+      }
+    } catch (e) {
+      if (e.code === 'AUTH') return;
+      toast(e.message, 'error');
+      if (e.code === 'NETWORK') clear($('dashExpiring')).appendChild(el('div', { class: 'empty', text: 'No saved copy on this phone yet. Open this page once with internet.' }));
+    }
+  },
+  common(d, mgr) {
+    $('lowStockCount').textContent = num(d.lowStock);
+    $('outOfStockCount').textContent = num(d.outOfStock);
+    $('lastSyncTime').textContent = new Date(d.syncedAt).toLocaleTimeString() + (d._cachedAt ? ' (saved copy)' : '');
+    ExpUI.cards($('dashExpStats'), d, mgr ? f => { Inv.presetSearch('', f); Nav.show('inventory'); } : null);
+    $('dashExpNote').textContent = d.expiry && d.expiry.expired.units ? num(d.expiry.expired.units) + ' expired units still in stock' : '';
+    ExpUI.list($('dashExpiring'), d);
+    const al = clear($('stockAlerts'));
+    if (!d.alerts.length) al.appendChild(el('div', { class: 'empty ok' }, icon('fas fa-circle-check'), ' All items properly stocked'));
+    d.alerts.forEach(a => al.appendChild(el('button', { type: 'button', class: 'li ' + (a.status === 'Out of Stock' ? 'alert-out' : 'alert-low'),
+      onclick: () => { if (mgr) { Inv.presetSearch(a.name); Nav.show('inventory'); } else Batches.open(a.name); } },
+      el('div', { class: 'main' }, el('div', { class: 't', text: a.name }), el('div', { class: 's', text: a.status === 'Out of Stock' ? 'Out of stock — urgent' : 'Low: ' + num(a.stock) + ' left' })),
+      icon('fa-solid fa-chevron-right muted'))));
+    if (d.alertCount > d.alerts.length) al.appendChild(el('div', { class: 'empty small', text: '+' + (d.alertCount - d.alerts.length) + ' more' }));
+  },
+  manager(d) {
+    $('todaySales').textContent = money(d.todaySales);
+    $('todaySalesCount').textContent = d.todayTransactions + ' transaction' + (d.todayTransactions === 1 ? '' : 's') + (d.todayCredit > 0 ? ' · ' + money(d.todayCredit) + ' on credit' : '');
+    $('inventoryValue').textContent = money(d.inventoryValue);
+    $('totalItems').textContent = num(d.itemCount) + ' items';
+    $('netProfit').textContent = money(d.netProfit);
+    $('profitMargin').textContent = d.profitMargin.toFixed(1) + '% margin · after expenses';
+    $('weeklySales').textContent = money(d.weekSales);
+    $('monthlySales').textContent = money(d.monthSales);
+    $('monthGross').textContent = money(d.monthGrossProfit);
+    $('monthExpenses').textContent = money(d.monthExpenses);
+    $('monthStockBought').textContent = money(d.monthStockPurchases || 0);
+    $('turnoverRate').textContent = d.stockTurnover.toFixed(1) + '%';
+    $('dashOwed').textContent = money(d.totalOwed || 0) + (d.debtorCount ? ' (' + d.debtorCount + ')' : '');
+    $('dashRepaid').textContent = money(d.todayRepaid || 0);
+    const sw = $('storageWarn');
+    sw.classList.toggle('hidden', !(d.storagePct >= 80));
+    if (d.storagePct >= 80) sw.textContent = 'The spreadsheet is ' + d.storagePct + '% full (Google allows 10 million cells). Go to Settings → Data maintenance and tap "Run maintenance now". If it stays high, contact your administrator.';
 
-      const rs = clear($('recentSales'));
-      if (!d.recent.length) rs.appendChild(el('div', { class: 'empty', text: 'No sales yet today' }));
-      d.recent.forEach(t => rs.appendChild(el('button', { type: 'button', class: 'li', onclick: () => Receipt.show(t.saleId) },
-        el('div', { class: 'main' }, el('div', { class: 't', text: t.items.slice(0, 2).join(', ') + (t.items.length > 2 ? ' +' + (t.items.length - 2) + ' more' : '') }),
-          el('div', { class: 's mono', text: t.saleId + ' · ' + t.soldBy + (t.paymentMethod === 'Credit' ? ' · owed by ' + custLabel(t.customerName, t.customerPhone) : '') })),
-        el('div', { class: 'r' }, el('div', { class: 'bold', text: money(t.total) }), el('span', { class: 'pill ' + payPill(t.paymentMethod), text: t.paymentMethod })))));
+    const rs = clear($('recentSales'));
+    if (!d.recent.length) rs.appendChild(el('div', { class: 'empty', text: 'No sales yet today' }));
+    d.recent.forEach(t => rs.appendChild(el('button', { type: 'button', class: 'li', onclick: () => Receipt.show(t.saleId) },
+      el('div', { class: 'main' }, el('div', { class: 't', text: t.items.slice(0, 2).join(', ') + (t.items.length > 2 ? ' +' + (t.items.length - 2) + ' more' : '') }),
+        el('div', { class: 's mono', text: t.saleId + ' · ' + t.soldBy + (t.paymentMethod === 'Credit' ? ' · owed by ' + custLabel(t.customerName, t.customerPhone) : '') })),
+      el('div', { class: 'r' }, el('div', { class: 'bold', text: money(t.total) }), el('span', { class: 'pill ' + payPill(t.paymentMethod), text: t.paymentMethod })))));
 
-      const al = clear($('stockAlerts'));
-      if (!d.alerts.length) al.appendChild(el('div', { class: 'empty ok' }, icon('fas fa-circle-check'), ' All items properly stocked'));
-      d.alerts.forEach(a => al.appendChild(el('button', { type: 'button', class: 'li ' + (a.status === 'Out of Stock' ? 'alert-out' : 'alert-low'), onclick: () => { Inv.presetSearch(a.name); Nav.show('inventory'); } },
-        el('div', { class: 'main' }, el('div', { class: 't', text: a.name }), el('div', { class: 's', text: a.status === 'Out of Stock' ? 'Out of stock — urgent' : 'Low: ' + num(a.stock) + ' left' })),
-        icon('fa-solid fa-chevron-right muted'))));
-      if (d.alertCount > d.alerts.length) al.appendChild(el('div', { class: 'empty small', text: '+' + (d.alertCount - d.alerts.length) + ' more' }));
-
-      const top = clear($('topSellingItems'));
-      if (!d.topItems.length) top.appendChild(el('div', { class: 'empty', text: 'No sales this month yet' }));
-      d.topItems.forEach((t, i) => top.appendChild(el('div', { class: 'li' }, el('span', { class: 'rank', text: String(i + 1) }),
-        el('div', { class: 'main' }, el('div', { class: 't', text: t.name })), el('span', { class: 'pill pill-green', text: num(t.quantity) + ' sold' }))));
-    } catch (e) { if (e.code !== 'AUTH') toast(e.message, 'error'); }
+    const top = clear($('topSellingItems'));
+    if (!d.topItems.length) top.appendChild(el('div', { class: 'empty', text: 'No sales this month yet' }));
+    d.topItems.forEach((t, i) => top.appendChild(el('div', { class: 'li' }, el('span', { class: 'rank', text: String(i + 1) }),
+      el('div', { class: 'main' }, el('div', { class: 't', text: t.name })), el('span', { class: 'pill pill-green', text: num(t.quantity) + ' sold' }))));
   }
 };
 $('refreshDashboard').addEventListener('click', () => Nav.show('dashboard', true));
@@ -1577,15 +1769,156 @@ $('refreshDashboard').addEventListener('click', () => Nav.show('dashboard', true
 /* =========================================================
    Inventory
    ========================================================= */
+/** Expiry date shown as a coloured pill: red = expired, amber = expiring soon, plain = fine. */
+function expBadge(exp, state, long) {
+  if (!exp) return el('span', { class: 'muted', text: long ? 'No expiry' : '—' });
+  const cls = state === 'expired' ? 'exp-expired' : state === 'soon' ? 'exp-soon' : state === 'watch' ? 'exp-watch' : 'exp-ok';
+  const title = state === 'expired' ? 'Expired' : state === 'soon' ? 'Expiring soon' : state === 'watch' ? 'Expiring within 90 days' : 'Expiry date';
+  return el('span', { class: 'exp ' + cls, title: title, text: (long && state === 'expired' ? 'Expired ' : long && state === 'soon' ? 'Expires ' : '') + exp });
+}
+/** Same rule as the server: expiry is optional, but never before the purchase date. */
+function expiryProblem(exp, purchase) {
+  if (!exp) return '';
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(exp)) return 'Invalid expiry date';
+  const bought = purchase || S.today;
+  return exp < bought ? 'Expiry date (' + exp + ') cannot be before the purchase date (' + bought + ').' : '';
+}
+
+/** "expired 9 days ago" / "expires today" / "in 14 days" */
+function daysText(d) {
+  if (d == null) return '';
+  if (d < 0) return 'expired ' + (-d) + ' day' + (d === -1 ? '' : 's') + ' ago';
+  if (d === 0) return 'expires today';
+  return 'expires in ' + d + ' day' + (d === 1 ? '' : 's');
+}
+/* Expiry stat cards + alert list, shared by the Inventory page and both dashboards */
+const ExpUI = {
+  GROUPS: [
+    { k: 'expired', cls: 'xs-expired', label: 'Expired', filter: 'Expired' },
+    { k: 'soon', cls: 'xs-soon', label: 'Expiring ≤ 30 days', filter: 'Expiring Soon' },
+    { k: 'watch', cls: 'xs-watch', label: 'Expiring 31–90 days', filter: 'Expiring Later' },
+    { k: 'nodate', cls: 'xs-nodate', label: 'No expiry date', filter: 'No Expiry' }
+  ],
+  /** onPick(filter) makes the cards buttons; active = the filter currently applied. */
+  cards(box, st, onPick, active) {
+    clear(box);
+    if (!st || !st.expiry) return;
+    this.GROUPS.forEach(g => {
+      const x = st.expiry[g.k] || { items: 0, units: 0 };
+      const label = g.k === 'soon' ? 'Expiring ≤ ' + st.warnDays + ' days' : g.k === 'watch' ? 'Expiring ' + (st.warnDays + 1) + '–' + st.watchDays + ' days' : g.label;
+      const sub = num(x.items) + ' item' + (x.items === 1 ? '' : 's') + (x.value != null && x.units ? ' · ' + money(x.value) + ' at cost' : '');
+      const kids = [el('div', { class: 'lbl', text: label }), el('div', { class: 'val', text: num(x.units) + (x.units === 1 ? ' unit' : ' units') }), el('div', { class: 'sub', text: sub })];
+      box.appendChild(onPick
+        ? el('button', { type: 'button', class: 'xs ' + g.cls + (active === g.filter ? ' on' : ''), title: 'Show these items', onclick: () => onPick(g.filter) }, kids)
+        : el('div', { class: 'xs ' + g.cls }, kids));
+    });
+  },
+  list(box, st) {
+    clear(box);
+    const list = (st && st.expiring) || [];
+    if (!list.length) { box.appendChild(el('div', { class: 'empty ok' }, icon('fas fa-circle-check'), ' Nothing expired or expiring in the next ' + ((st && st.watchDays) || 90) + ' days')); return; }
+    list.forEach(x => box.appendChild(el('button', { type: 'button', class: 'li ' + (x.state === 'expired' ? 'alert-exp' : x.state === 'soon' ? 'alert-soon' : 'alert-watch'), onclick: () => Batches.open(x.name) },
+      el('div', { class: 'main' }, el('div', { class: 't', text: x.name }),
+        el('div', { class: 's', text: num(x.units) + ' units · ' + daysText(x.days) + (x.value != null ? ' · ' + money(x.value) : '') })),
+      el('div', { class: 'r' }, expBadge(x.expiry, x.state)))));
+    if (st.expiringCount > list.length) box.appendChild(el('div', { class: 'empty small', text: '+' + (st.expiringCount - list.length) + ' more batches' }));
+  },
+  note(st) {
+    if (!st) return '';
+    const e = st.expiry && st.expiry.expired;
+    return e && e.units ? 'Write off expired stock from its batch: tap the batches pill' : '';
+  }
+};
+
+/* Batch details for one item: tap the "2 batches" pill in the Inventory table */
+const Batches = {
+  name: null,
+  async open(name) {
+    this.name = name;
+    $('batchTitle').textContent = name;
+    $('batchMeta').textContent = 'Loading batches…';
+    clear($('batchList'));
+    Modal.open('batchModal');
+    try {
+      const r = await call('getItemBatches', name);
+      if (this.name === name) this.render(r);
+    } catch (e) { if (this.name === name) $('batchMeta').textContent = ''; if (e.code !== 'AUTH') toast(e.message, 'error'); }
+  },
+  render(r) {
+    const n = r.batches.length, box = clear($('batchList'));
+    $('batchMeta').textContent = num(r.stock) + ' in stock · ' + n + (n === 1 ? ' batch' : ' batches') +
+      ' · sold oldest batch first · red = expired, amber = within ' + r.warnDays + ' days, blue = within ' + (r.watchDays || 90) + ' days' +
+      (r._cachedAt ? ' · saved copy' : '');
+    r.batches.forEach(b => {
+      const parts = [num(b.remaining) + ' of ' + num(b.original) + ' left'];
+      if (b.cost != null) parts.push('cost ' + money(b.cost));
+      if (b.addedBy) parts.push('by ' + b.addedBy);
+      if (b.days != null) parts.push(daysText(b.days));
+      let form = null;
+      if (isMgr() && !r._cachedAt) {
+        const inp = el('input', { type: 'date', value: b.expiry || '', min: b.purchaseDate || null, 'aria-label': 'Expiry date for batch ' + b.batchId });
+        const btn = el('button', { type: 'submit', class: 'btn btn-ghost btn-sm', text: b.expiry ? 'Change expiry' : 'Set expiry' });
+        const wo = el('button', { type: 'button', class: 'btn btn-danger btn-sm', text: 'Write off', onclick: () => this.writeOff(b) });
+        form = el('form', { class: 'exp-edit', novalidate: true, onsubmit: e => { e.preventDefault(); this.save(b, inp.value, btn); } }, inp, btn, wo);
+      }
+      box.appendChild(el('div', { class: 'li batch-row' },
+        el('div', { class: 'main' },
+          el('div', { class: 't', text: 'Received ' + (b.purchaseDate || '—') }),
+          el('div', { class: 's', text: parts.join(' · ') }),
+          el('div', { class: 's mono', text: b.batchId })),
+        el('div', { class: 'r' }, expBadge(b.expiry, b.expState, true)),
+        form));
+    });
+    if (r.untracked) box.appendChild(el('div', { class: 'empty small', text: num(r.untracked) + ' unit(s) have no batch record yet (stock from before batches were tracked). They become a batch the next time this item changes or maintenance runs.' }));
+    if (!n && !r.untracked) box.appendChild(el('div', { class: 'empty', text: 'No stock on hand' }));
+  },
+  /** Remove units from THIS batch (e.g. expired), rather than oldest-first. */
+  async writeOff(b) {
+    const qty = el('input', { type: 'number', min: '1', max: String(b.remaining), step: '1', value: String(b.remaining), inputmode: 'numeric', 'aria-label': 'Units to write off' });
+    const why = el('input', { maxlength: '150', value: b.expState === 'expired' ? 'Expired' : '', placeholder: 'Reason (required), e.g. Expired, Damaged' });
+    const box = el('div', null, el('p', { class: 'mb', text: 'Batch ' + b.batchId + ' · ' + num(b.remaining) + ' left' + (b.expiry ? ' · expiry ' + b.expiry : '') + '. The units are removed from stock and recorded in the AdjustmentLog.' }),
+      el('label', { class: 'field' }, el('span', { text: 'Units' }), qty), el('label', { class: 'field mt' }, el('span', { text: 'Reason' }), why));
+    if (!await confirmBox('Write off stock?', box, 'Write off')) return;
+    const n = Number(qty.value);
+    if (!Number.isInteger(n) || n < 1 || n > b.remaining) { toast('Enter a whole number from 1 to ' + b.remaining, 'error'); return; }
+    if (!why.value.trim()) { toast('A reason is required', 'error'); return; }
+    try {
+      const r = await call('writeOffBatch', b.batchId, n, why.value.trim());
+      toast(r.message);
+      await Inv.fetch(true); Inv.apply();
+      if (S.tab === 'dashboard') Dash.load();
+      await this.open(this.name);
+    } catch (e) { toast(e.message, 'error'); }
+  },
+  async save(b, val, btn) {
+    const ex = expiryProblem(val, b.purchaseDate);
+    if (ex) { toast(ex, 'error'); return; }
+    if ((val || '') === (b.expiry || '')) { toast('No change'); return; }
+    await busy(btn, 'Saving…', async () => {
+      try {
+        const r = await call('setBatchExpiry', b.batchId, val);
+        toast(r.message);
+        await Inv.fetch(true); Inv.apply();
+        await this.open(this.name);
+      } catch (e) { toast(e.message, 'error'); }
+    });
+  }
+};
+
+/** Expiry filters → bit flags sent with each item (same values as EXPF on the server). */
+const INV_FLAG = { 'Expired': 1, 'Expiring Soon': 2, 'Expiring Later': 4, 'No Expiry': 8 };
 const Inv = {
+  stats: null,
   items: [], byName: new Map(), filtered: [], page: 1, selected: null, pending: null, loadedAt: 0,
   mode: 'client', total: 0, seq: 0, last: null,   // mode 'server' = very large catalogue, searched on the server
-  toObj(r) { return { name: r[0], lname: String(r[0]).toLowerCase(), stock: r[1], cost: r[2], price: r[3], date: r[4], reorder: r[5], status: r[6] }; },
+  toObj(r) { return { name: r[0], lname: String(r[0]).toLowerCase(), stock: r[1], cost: r[2], price: r[3], date: r[4], reorder: r[5], status: r[6],
+    batches: Number(r[7]) || 0, expiry: r[8] || '', expState: r[9] || '', flags: Number(r[10]) || 0 }; },
   remember(rows) { return (rows || []).map(r => { const o = this.toObj(r); this.byName.set(o.lname, o); return o; }); },
   fetch(force) {
     if (!force && this.loadedAt && Date.now() - this.loadedAt < 60000) return Promise.resolve(this.items);
     if (this.pending) return this.pending;
     this.pending = call('getInventoryData').then(res => {
+      this.stats = res.stats || null;
       if (res.mode === 'server') {
         this.mode = 'server'; this.total = res.count; this.items = [];
         if (force || !this.byName.size) this.byName = new Map();
@@ -1593,10 +1926,10 @@ const Inv = {
         this.mode = 'client';
         this.items = (res.rows || []).map(r => this.toObj(r));
         this.byName = new Map(this.items.map(i => [i.lname, i]));
-        // Copy for selling offline: names, stock, prices only (never costs)
-        DB.put('inv', { at: Date.now(), rows: (res.rows || []).map(r => [r[0], r[1], '', r[3], '', r[5], r[6]]) }).catch(() => {});
+        // Copy for selling offline: names, stock, prices only (never costs). Not refreshed from a saved copy.
+        if (!res._cachedAt) DB.put('inv', { at: Date.now(), rows: (res.rows || []).map(r => [r[0], r[1], '', r[3], '', r[5], r[6], r[7], r[8], r[9], r[10]]) }).catch(() => {});
       }
-      this.loadedAt = Date.now(); this.stale = 0;
+      this.loadedAt = res._cachedAt ? Date.now() - 45000 : Date.now(); this.stale = res._cachedAt || 0;
       this.deductOutbox();
       if (this.selected) this.selected = this.find(this.selected.name) || null;
       return this.items;
@@ -1621,21 +1954,31 @@ const Inv = {
   deductOutbox(list) { (list || Array.from(this.byName.values())).forEach(i => { const q = Outbox.qty(i.lname); if (q) i.stock = Math.max(0, i.stock - q); }); },
   /** Adjust the stock shown on this phone for one unsent sale: sign -1 when saved, +1 when removed. */
   move(sale, sign) { (sale.items || []).forEach(l => { const i = this.find(l.itemName); if (i) i.stock = Math.max(0, i.stock + sign * (Number(l.quantity) || 0)); }); },
-  presetSearch(q) { $('inventorySearch').value = q; $('statusFilter').value = 'All'; this.page = 1; },
+  presetSearch(q, status) { $('inventorySearch').value = q || ''; $('statusFilter').value = status || 'All'; this.page = 1; },
+  renderStats() {
+    ExpUI.cards($('invExpStats'), this.stats, f => {
+      const sel = $('statusFilter'); sel.value = sel.value === f ? 'All' : f;   // tap again to clear
+      this.apply(true);
+    }, $('statusFilter').value);
+    $('invExpNote').textContent = ExpUI.note(this.stats);
+  },
   async load(force) {
-    if (!this.last) emptyRow($('inventoryTableBody'), 7, 'Loading inventory…');
-    try { await this.fetch(force); this.apply(); } catch (e) { if (e.code !== 'AUTH') { toast(e.message, 'error'); emptyRow($('inventoryTableBody'), 7, 'Could not load inventory'); } }
+    if (!this.last) emptyRow($('inventoryTableBody'), 8, 'Loading inventory…');
+    try { await this.fetch(force); this.apply(); } catch (e) { if (e.code !== 'AUTH') { toast(e.message, 'error'); emptyRow($('inventoryTableBody'), 8, 'Could not load inventory'); } }
   },
   apply(resetPage) {
     if (resetPage) this.page = 1;
+    this.renderStats();
     if (this.mode === 'server') { this.serverPage(); return; }
     const q = $('inventorySearch').value.trim().toLowerCase(), st = $('statusFilter').value;
-    this.filtered = this.items.filter(i => (!q || i.lname.indexOf(q) >= 0) && (st === 'All' || i.status === st));
+    const bit = INV_FLAG[st];
+    const stOk = i => st === 'All' || (bit ? (i.flags & bit) !== 0 : i.status === st);
+    this.filtered = this.items.filter(i => (!q || i.lname.indexOf(q) >= 0) && stOk(i));
     this.render();
   },
   async serverPage() {
     const my = ++this.seq, size = this.pageSize();
-    if (!this.last) emptyRow($('inventoryTableBody'), 7, 'Loading inventory…');
+    if (!this.last) emptyRow($('inventoryTableBody'), 8, 'Loading inventory…');
     try {
       const r = await call('searchInventory', { q: $('inventorySearch').value.trim(), status: $('statusFilter').value, page: this.page, pageSize: size });
       if (my !== this.seq) return;   // a newer search already started
@@ -1664,14 +2007,17 @@ const Inv = {
     const size = this.pageSize(), tb = $('inventoryTableBody');
     $('rowCount').textContent = total ? (total <= size ? total + ' item' + (total === 1 ? '' : 's') : (start + 1) + '–' + Math.min(start + size, total) + ' of ' + num(total)) : 'No items found';
     $('selectedHint').textContent = this.selected ? 'Selected: ' + this.selected.name : 'Tap an item to select it';
-    if (!rows.length) { emptyRow(tb, 7, 'No items found'); pager($('inventoryPagination'), 1, 1); return; }
+    if (!rows.length) { emptyRow(tb, 8, 'No items found'); pager($('inventoryPagination'), 1, 1); return; }
     const f = document.createDocumentFragment();
     rows.forEach(i => f.appendChild(el('tr', { class: this.selected && this.selected.lname === i.lname ? 'selected' : null, dataset: { name: i.lname } },
       el('td', { class: 'pc', 'data-label': 'Name', text: i.name }),
       el('td', { class: 'num', 'data-label': 'Stock', text: num(i.stock) }),
+      el('td', { 'data-label': 'Batches' }, i.batches > 0
+        ? el('button', { type: 'button', class: 'pill-batch', dataset: { batches: i.name }, title: 'See batches and expiry dates', text: i.batches + (i.batches === 1 ? ' batch' : ' batches') })
+        : el('span', { class: 'muted', text: '—' })),
+      el('td', { 'data-label': 'Expiry' }, expBadge(i.expiry, i.expState)),
       el('td', { class: 'num', 'data-label': 'Avg cost', text: i.cost == null ? '—' : money(i.cost) }),
       el('td', { class: 'num', 'data-label': 'Price', text: money(i.price) }),
-      el('td', { 'data-label': 'Purchased', text: i.date || '—' }),
       el('td', { class: 'num', 'data-label': 'Reorder at', text: num(i.reorder) }),
       el('td', { 'data-label': 'Status' }, el('span', { class: 'badge ' + statusCls(i.status), text: i.status })))));
     clear(tb).appendChild(f);
@@ -1679,7 +2025,7 @@ const Inv = {
   },
   openAdd() {
     $('addInventoryForm').reset(); $('addCostHint').classList.add('hidden');
-    $('addPurchaseDate').value = S.today;
+    $('addPurchaseDate').value = S.today; $('addExpiryDate').value = '';
     if (this.selected) { const s = this.selected; $('addName').value = s.name; $('addPrice').value = s.price; $('addReorderLevel').value = s.reorder; if (s.cost != null) $('addCost').value = s.cost; }
     Modal.open('invModal');
   },
@@ -1690,7 +2036,7 @@ const Inv = {
     $('editCost').value = i.cost != null ? Number(i.cost).toFixed(2) : '';
     $('editPrice').value = Number(i.price).toFixed(2);
     $('editReorderLevel').value = i.reorder;
-    $('editPurchaseDate').value = i.date || '';
+    $('editPurchaseDate').value = i.date || ''; $('editExpiryDate').value = '';
     $('editReason').value = '';
     editPreview(); editCostCheck();
   },
@@ -1706,13 +2052,15 @@ const Inv = {
       catch (e) { toast(e.message, 'error'); return; }
     }
     if (!src.length) { toast('No inventory to export', 'error'); return; }
-    downloadCSV([['Item Name', 'Stock', 'Avg Cost (GHC)', 'Price (GHC)', 'Purchase Date', 'Reorder Level', 'Status']]
-      .concat(src.map(i => [i.name, i.stock, i.cost, i.price, i.date, i.reorder, i.status])), 'inventory_' + S.today + '.csv');
+    downloadCSV([['Item Name', 'Stock', 'Batches', 'Next Expiry', 'Avg Cost (GHC)', 'Price (GHC)', 'Last Purchase Date', 'Reorder Level', 'Status']]
+      .concat(src.map(i => [i.name, i.stock, i.batches, i.expiry, i.cost, i.price, i.date, i.reorder, i.status])), 'inventory_' + S.today + '.csv');
   }
 };
 $('inventorySearch').addEventListener('input', debounce(() => Inv.apply(true), 200));
 $('statusFilter').addEventListener('change', () => Inv.apply(true));
 $('inventoryTableBody').addEventListener('click', e => {
+  const pill = e.target.closest('[data-batches]');
+  if (pill) { Batches.open(pill.dataset.batches); return; }
   const tr = e.target.closest('tr[data-name]'); if (!tr) return;
   const it = Inv.byName.get(tr.dataset.name);
   Inv.selected = (Inv.selected && Inv.selected.lname === tr.dataset.name) ? null : it;
@@ -1733,7 +2081,8 @@ autocomplete($('editName'), $('editNameAC'), invSource, it => Inv.fillEdit(it.it
 
 $('addInventoryForm').addEventListener('submit', async e => {
   e.preventDefault();
-  const item = { name: $('addName').value.trim(), stock: $('addStock').value, cost: $('addCost').value, price: $('addPrice').value, reorderLevel: $('addReorderLevel').value, purchaseDate: $('addPurchaseDate').value };
+  const item = { name: $('addName').value.trim(), stock: $('addStock').value, cost: $('addCost').value, price: $('addPrice').value, reorderLevel: $('addReorderLevel').value, purchaseDate: $('addPurchaseDate').value, expiryDate: $('addExpiryDate').value };
+  { const ex = expiryProblem(item.expiryDate, item.purchaseDate); if (ex) { toast(ex, 'error'); $('addExpiryDate').focus(); return; } }
   if (!item.name) { toast('Enter an item name', 'error'); return; }
   if (!(Number(item.stock) >= 1) || !Number.isInteger(Number(item.stock))) { toast('Quantity must be a whole number ≥ 1', 'error'); return; }
   if (item.cost === '' || item.price === '' || item.reorderLevel === '') { toast('Fill in cost, price and reorder level', 'error'); return; }
@@ -1783,6 +2132,7 @@ function editPreview() {
   const p = $('editPreview'), cur = Inv.find($('editName').value), raw = $('editAdjust').value.trim(), adj = Number(raw);
   const neg = raw !== '' && adj < 0;
   $('editCost').readOnly = neg;                         // cost only matters when adding stock
+  $('editExpiryDate').disabled = !(raw !== '' && adj > 0);   // expiry belongs to the new batch being added
   $('editReasonLabel').textContent = neg ? 'Reason (required)' : 'Reason (required when removing stock)';
   p.classList.remove('err', 'ok');
   if (raw === '' || adj === 0) { p.textContent = 'Leave blank to keep the stock as it is.'; p.classList.add('muted'); return; }
@@ -1817,7 +2167,9 @@ $('editInventoryForm').addEventListener('submit', async e => {
   if ($('editPrice').value !== '' && !(Number($('editPrice').value) > 0)) { toast('Selling price must be more than 0', 'error'); return; }
   const ec = editCostCheck();
   if (ec) { toast(ec, 'error'); $('editPrice').focus(); return; }
-  const item = { name: cur.name, adjustment: adj === 0 ? '' : adj, cost: $('editCost').value, price: $('editPrice').value, reorderLevel: $('editReorderLevel').value, purchaseDate: $('editPurchaseDate').value, reason: reason };
+  const item = { name: cur.name, adjustment: adj === 0 ? '' : adj, cost: $('editCost').value, price: $('editPrice').value, reorderLevel: $('editReorderLevel').value, purchaseDate: $('editPurchaseDate').value, reason: reason,
+    expiryDate: adj > 0 ? $('editExpiryDate').value : '' };
+  if (adj > 0) { const ex = expiryProblem(item.expiryDate, item.purchaseDate); if (ex) { toast(ex, 'error'); $('editExpiryDate').focus(); return; } }
   if (adj < 0) {
     const ok = await confirmBox('Remove ' + num(-adj) + ' from stock?', cur.name + ': ' + num(cur.stock) + ' → ' + num(cur.stock + adj) + '. Reason: ' + reason + '. This is recorded in the AdjustmentLog sheet.', 'Remove stock');
     if (!ok) return;
@@ -1859,7 +2211,7 @@ function downloadCSV(rows, filename) {
 
 const Bulk = { items: [] };
 $('bulkUploadButton').addEventListener('click', () => { $('bulkUploadForm').reset(); $('bulkPreview').textContent = ''; $('bulkSubmit').disabled = true; Bulk.items = []; Modal.open('bulkModal'); });
-$('csvTemplateBtn').addEventListener('click', () => downloadCSV([['Name', 'Stock', 'Cost', 'Price', 'PurchaseDate', 'ReorderLevel'], ['Example Soap 250g', 24, 6.5, 9, S.today, 5]], 'inventory_template.csv'));
+$('csvTemplateBtn').addEventListener('click', () => downloadCSV([['Name', 'Stock', 'Cost', 'Price', 'PurchaseDate', 'ReorderLevel', 'ExpiryDate'], ['Example Soap 250g', 24, 6.5, 9, S.today, 5, '']], 'inventory_template.csv'));
 $('bulkUploadFile').addEventListener('change', () => {
   const file = $('bulkUploadFile').files[0];
   Bulk.items = []; $('bulkSubmit').disabled = true;
@@ -1870,8 +2222,9 @@ $('bulkUploadFile').addEventListener('change', () => {
     const rows = parseCSV(String(ev.target.result)).slice(1);
     const bad = [];
     Bulk.items = rows.map((r, n) => {
-      const it = { name: (r[0] || '').trim(), stock: Number(r[1]), cost: Number(r[2] || 0), price: Number(r[3] || 0), purchaseDate: (r[4] || '').trim(), reorderLevel: Number(r[5] || 0) };
-      if (!it.name || !Number.isInteger(it.stock) || it.stock < 1 || isNaN(it.cost) || it.cost < 0 || !(it.price > 0) || r2(it.cost) > r2(it.price) || !Number.isInteger(it.reorderLevel) || it.reorderLevel < 0) { bad.push(n + 2); return null; }
+      const it = { name: (r[0] || '').trim(), stock: Number(r[1]), cost: Number(r[2] || 0), price: Number(r[3] || 0), purchaseDate: (r[4] || '').trim(), reorderLevel: Number(r[5] || 0), expiryDate: (r[6] || '').trim() };
+      if (!it.name || !Number.isInteger(it.stock) || it.stock < 1 || isNaN(it.cost) || it.cost < 0 || !(it.price > 0) || r2(it.cost) > r2(it.price) || !Number.isInteger(it.reorderLevel) || it.reorderLevel < 0
+        || expiryProblem(it.expiryDate, /^\d{4}-\d{2}-\d{2}$/.test(it.purchaseDate) ? it.purchaseDate : S.today)) { bad.push(n + 2); return null; }
       return it;
     }).filter(Boolean);
     $('bulkPreview').textContent = Bulk.items.length + ' valid row(s) ready' + (bad.length ? ' · ' + bad.length + ' invalid (rows ' + bad.slice(0, 8).join(', ') + (bad.length > 8 ? '…' : '') + ')' : '');
@@ -2124,7 +2477,7 @@ const Receipt = {
   },
   company(r) {
     const c = Object.assign({}, Brand.s, r.company || {});
-    const name = c.companyName || 'SmartStore 360';
+    const name = c.companyName || 'MediStore 360';
     this.co = { name: name, address: c.address || '', phone: c.phone || '' };
     $('rcptCompany').textContent = name;
     $('rcptAddress').textContent = c.address || ''; $('rcptAddress').classList.toggle('hidden', !c.address);
@@ -2173,7 +2526,7 @@ const Receipt = {
       if (r.paidAtSale > 0) L.push('Paid at sale: ' + money(r.paidAtSale) + ' (' + r.paidAtSaleMethod + ')');
       L.push('Still owed: ' + money(bal));
     }
-    L.push('━━━━━━━━━━━━━━━━━━', 'Thank you for your business!', 'Powered by SmartStore 360');
+    L.push('━━━━━━━━━━━━━━━━━━', 'Thank you for your business!', 'Powered by MediStore 360');
     this.text = L.join('\n');
     this.data = { kind: 'sale', r: r }; this.prepare();
   },
@@ -2206,7 +2559,7 @@ const Receipt = {
     p.applied.forEach(a => L.push(a.saleId + ' (' + a.date + '): ' + money(a.amount)));
     L.push('──────────────────', 'AMOUNT PAID: ' + money(p.amount) + ' (' + p.method + ')', 'Still owed: ' + money(p.balanceAfter));
     if (reversed) L.push('*** ' + p.status + ' ***');
-    L.push('━━━━━━━━━━━━━━━━━━', 'Thank you!', 'Powered by SmartStore 360');
+    L.push('━━━━━━━━━━━━━━━━━━', 'Thank you!', 'Powered by MediStore 360');
     this.text = L.join('\n');
     this.data = { kind: 'payment', r: p }; this.prepare();
   },
@@ -2224,7 +2577,7 @@ const Receipt = {
   },
   async makeFile() {
     const JsPDF = await loadJsPDF();
-    const blob = buildReceiptPdf(JsPDF, this.data, this.co || { name: Brand.s.companyName || 'SmartStore 360' });
+    const blob = buildReceiptPdf(JsPDF, this.data, this.co || { name: Brand.s.companyName || 'MediStore 360' });
     return new File([blob], this.fileName(), { type: 'application/pdf' });
   },
   async sharePdf() {
@@ -2361,12 +2714,12 @@ function buildReceiptPdf(JsPDF, data, co) {
     }
     rule(true);
     text(pay ? 'Thank you!' : 'Thank you for your business!', { size: 8.5, align: 'center' });
-    text('Powered by SmartStore 360', { size: 7, align: 'center', color: [120, 120, 120] });
+    text('Powered by MediStore 360', { size: 7, align: 'center', color: [120, 120, 120] });
     return y + 4;
   }
   const height = Math.max(70, Math.ceil(pass(new JsPDF({ unit: 'mm', format: [W, 2000] }), false)));
   const doc = new JsPDF({ unit: 'mm', format: [W, height], compress: true });
-  doc.setProperties({ title: (pay ? 'Payment ' + r.paymentId : 'Receipt ' + r.saleId) + ' - ' + co.name, creator: 'SmartStore 360' });
+  doc.setProperties({ title: (pay ? 'Payment ' + r.paymentId : 'Receipt ' + r.saleId) + ' - ' + co.name, creator: 'MediStore 360' });
   pass(doc, true);
   return doc.output('blob');
 }
@@ -2847,8 +3200,10 @@ const Debt = {
     if (!this.list.length) clear($('debtList')).appendChild(el('div', { class: 'empty', text: 'Loading…' }));
     try {
       const r = await call('getDebtors');
-      this.list = r.debtors || [];
-      $('debtTotal').textContent = money(r.totalOwed);
+      // Payments saved on this phone but not yet on the server already count as paid here
+      let pend = 0;
+      this.list = (r.debtors || []).map(d => { const p = Outbox.paidPending(d.key); pend += p; return p ? Object.assign({}, d, { owed: Math.max(0, Math.round((d.owed - p) * 100) / 100) }) : d; }).filter(d => d.owed > 0.004);
+      $('debtTotal').textContent = money(Math.max(0, r.totalOwed - pend));
       $('debtCount').textContent = r.count + ' customer' + (r.count === 1 ? '' : 's') + ' owing';
       this.shown = 40; this.render();
       call('getTodaysSalesBreakdown').then(b => { $('debtRepaidToday').textContent = money(b.repaid || 0); }).catch(() => {});
@@ -2899,15 +3254,29 @@ const Debt = {
     if (a > d.owed + 0.004) { toast('Amount is more than ' + d.name + ' owes', 'error'); return; }
     if (!await confirmBox('Receive ' + money(a) + '?', d.name + ' · ' + this.method + (a < d.owed ? ' · still owes ' + money(d.owed - a) + ' after this' : ' · fully paid'), 'Save payment', false)) return;
     this.ref = this.ref || uid();
+    const pay = { customerKey: d.key, amount: a, method: this.method, note: $('payNote').value.trim(), clientRef: this.ref };
+    // No connection (or no answer): keep it on this phone and send it later — the server recognises a resend by its ref
+    const keepOffline = async () => {
+      try { await Outbox.addPayment(Object.assign({}, pay, { offline: true, date: S.today }), { name: d.name, phone: d.phone }); }
+      catch (x) { toast('Could not save the payment on this phone. Try again with a connection.', 'error'); return; }
+      this.ref = null;
+      Modal.close('payModal'); if (Modal.stack.indexOf('debtorModal') >= 0) Modal.close('debtorModal');
+      toast('No connection. Payment of ' + money(a) + ' saved on this phone and will be sent automatically.');
+      this.load();
+    };
     await busy($('paySubmit'), 'Saving…', async () => {
+      if (!Net.online && navigator.onLine === false) { await keepOffline(); return; }
       try {
-        const r = await call('recordCreditPayment', { customerKey: d.key, amount: a, method: this.method, note: $('payNote').value.trim(), clientRef: this.ref });
+        const r = await call('recordCreditPayment', pay);
         this.ref = null;
         Modal.close('payModal'); if (Modal.stack.indexOf('debtorModal') >= 0) Modal.close('debtorModal');
         toast(r.duplicate ? 'Payment was already recorded' : 'Payment received — ' + money(a));
         this.load();
         Receipt.showPayment(r.paymentId, r.receipt);
-      } catch (e) { toast(e.message, 'error'); }
+      } catch (e) {
+        if (e.code === 'NETWORK' || e.code === 'AUTH') { await keepOffline(); return; }
+        toast(e.message, 'error');
+      }
     });
   },
   async detail(key) {
@@ -2916,6 +3285,8 @@ const Debt = {
     Modal.open('debtorModal');
     try {
       const r = await call('getDebtorDetail', key);
+      const pend = Outbox.paidPending(r.key);
+      if (pend) r.owed = Math.max(0, Math.round((r.owed - pend) * 100) / 100);   // unsent payments saved on this phone
       $('debtorTitle').textContent = r.name;
       clear(body);
       const tel = r.phone.replace(/[^\d+]/g, '');   // tel: link from digits only
@@ -2996,10 +3367,12 @@ const Auth = {
     const tok = tabStore.get(TOKEN_KEY);   // only a reload of this same tab can resume
     if (tok) {
       this.busy(true, 'Checking session…');
+      let ctx = null; try { ctx = JSON.parse(tabStore.get(CTX_KEY) || 'null'); } catch (x) { ctx = null; }
+      S.dk = (ctx && ctx.dk) || null;   // key of this user's saved offline pages
       try { const r = await api('resumeSession', tok); this.busy(false); this.start(tok, r); return; }
       catch (e) {
-        let ctx = null; try { ctx = JSON.parse(tabStore.get(CTX_KEY) || 'null'); } catch (x) { ctx = null; }
         if (e.code === 'NETWORK' && ctx && ctx.user) { this.busy(false); this.start(tok, ctx, true); return; }
+        S.dk = null;
         tabStore.del(TOKEN_KEY); tabStore.del(CTX_KEY);
       }
       this.busy(false);
@@ -3012,21 +3385,34 @@ const Auth = {
     this.error(''); this.busy(true);
     try {
       const r = await api('login', u, p); $('password').value = '';
-      this.start(r.token, r);
-      Cred.save(r.user.username, p, this.ctx(r));   // allows signing in on this phone without internet for 12 hours
+      S.dk = null;
+      this.start(r.token, r, false, Cred.ok());
+      // Offline pages: reuse this user's existing key (so pages saved earlier still open), else make one.
+      // Then save the session for signing in on this phone without internet for 12 hours.
+      if (Cred.ok()) (async () => {
+        const old = await Cred.peek(r.user.username, p);
+        if (S.token !== r.token) return;
+        S.dk = (old && old.dk) || Cred.newKey();
+        Vault.setKey(S.dk); this.persist(r.idleMinutes);
+        Cred.save(r.user.username, p, this.ctx(r));
+      })();
     } catch (err) {
       if (err.code !== 'NETWORK') { this.error(err.message); $('password').select(); return; }
       // No connection: sign in with the session saved on this phone, if the password opens it.
       this.busy(true, 'Signing in offline…');
       const o = await Cred.open(u, p);
-      if (o.ctx) { $('password').value = ''; this.start(o.ctx.token, o.ctx, true); toast('Signed in offline. Sales are saved on this phone until the connection returns.'); return; }
+      if (o.ctx) { $('password').value = ''; S.dk = o.ctx.dk || null; this.start(o.ctx.token, o.ctx, true); toast('Signed in offline. Sales are saved on this phone until the connection returns.'); return; }
       this.error(o.error === 'locked' ? 'Too many attempts. Try again in 5 minutes.'
         : 'No internet connection. Without internet, you can only sign in with the same password if you signed in online on this phone in the last 12 hours.');
       $('password').select();
     } finally { this.busy(false); }
   },
-  ctx(r) { return { token: S.token, user: r.user, perms: r.perms || {}, idleMinutes: r.idleMinutes, dayShift: S.dayShift || 0 }; },
-  start(token, r, offline) {
+  ctx(r) { return { token: S.token, user: r.user, perms: r.perms || {}, idleMinutes: r.idleMinutes, dayShift: S.dayShift || 0, dk: S.dk || null }; },
+  /** This tab's session details (for a reload while offline). Cleared when the tab closes. */
+  persist(idleMinutes) {
+    tabStore.set(CTX_KEY, JSON.stringify({ user: S.user, perms: S.perms, idleMinutes: idleMinutes, dayShift: S.dayShift, dk: S.dk || null }));
+  },
+  start(token, r, offline, keyLater) {
     S.token = token; S.user = r.user; S.perms = r.perms || {}; S.signedInAt = new Date(); S.offline = !!offline;
     if (offline) {   // no server date: use this phone's date, corrected the same way as at the last online sign-in
       S.dayShift = r.dayShift || 0;
@@ -3037,18 +3423,20 @@ const Auth = {
       S.dayShift = Math.round((Date.parse(S.today + 'T00:00:00Z') - Date.parse(localYMD() + 'T00:00:00Z')) / 86400000) || 0;
     }
     tabStore.set(TOKEN_KEY, token);
-    tabStore.set(CTX_KEY, JSON.stringify({ user: r.user, perms: S.perms, idleMinutes: r.idleMinutes, dayShift: S.dayShift }));
+    this.persist(r.idleMinutes);
+    Vault.begin(r.user.username);
+    if (!keyLater) Vault.setKey(S.dk);   // online sign-in: the key arrives a moment later (see login)
     Idle.start(r.idleMinutes);
     document.body.classList.toggle('role-staff', !isMgr());
     $('drawerUser').textContent = r.user.username; $('drawerRole').textContent = r.user.role;
     $('loginView').classList.add('hidden'); $('app').classList.remove('hidden');
     Nav.build(); Brand.load();
     Inv.fetch().catch(() => {});
-    Nav.show(isMgr() && !offline ? 'dashboard' : 'sales');
+    Nav.show(isMgr() ? 'dashboard' : 'sales');   // staff land on the till; their dashboard is one tap away
     Outbox.load().then(() => Outbox.sync());
   },
   reset() {
-    S.token = null; S.user = null; S.tab = null;
+    S.token = null; S.user = null; S.tab = null; S.dk = null; Vault.clear(); Stale.hide();
     tabStore.del(TOKEN_KEY); tabStore.del(CTX_KEY); S.offline = false; Idle.stop(); Clock.stop(); Modal.closeAll(); Nav.closeDrawer();
     $('password').value = '';
     Inv.items = []; Inv.byName = new Map(); Inv.loadedAt = 0; Inv.selected = null;
@@ -3059,13 +3447,16 @@ const Auth = {
     Inv.filtered = []; Inv.last = null; Inv.mode = 'client'; Inv.page = 1;
     // Nothing from the previous user may remain in the page, even hidden (shared devices)
     ['reportsOutput', 'recentSales', 'voidSaleRecentSales', 'stockAlerts', 'topSellingItems', 'inventoryTableBody', 'inventoryPagination',
+     'dashExpStats', 'dashExpiring', 'invExpStats', 'batchList',
      'expensesTableBody', 'expensesPagination', 'voidItemsList', 'maintStatus', 'salesBreakdown', 'userSelect', 'rcptItems', 'rcptCustomer']
       .forEach(id => { const n = $(id); if (n) clear(n); });
     clear($('usersTable').querySelector('tbody'));
     ['todaySales', 'inventoryValue', 'lowStockCount', 'outOfStockCount', 'netProfit', 'weeklySales', 'monthlySales', 'monthGross', 'monthExpenses',
      'monthStockBought', 'turnoverRate', 'dashOwed', 'dashRepaid', 'totalExpenses', 'cashExpenses', 'momoExpenses', 'monthlyExpenses',
      'debtTotal', 'debtRepaidToday'].forEach(id => { const n = $(id); if (n) n.textContent = '—'; });
-    ['todaySalesCount', 'totalItems', 'profitMargin', 'expenseCount', 'debtCount', 'voidSaleMeta', 'rowCount'].forEach(id => { const n = $(id); if (n) n.textContent = ''; });
+    Inv.stats = null;
+    ['staffItems'].forEach(id => { const n = $(id); if (n) n.textContent = '—'; });
+    ['staffUnits', 'dashExpNote', 'invExpNote', 'batchMeta', 'todaySalesCount', 'totalItems', 'profitMargin', 'expenseCount', 'debtCount', 'voidSaleMeta', 'rowCount'].forEach(id => { const n = $(id); if (n) n.textContent = ''; });
     ['inventorySearch', 'expenseSearch', 'expenseStartDate', 'expenseEndDate', 'voidSaleSectionId', 'voidConfirmationReason', 'itemName', 'unitPrice',
      'oldPassword', 'newPassword', 'confirmNewPassword'].forEach(id => { const n = $(id); if (n) n.value = ''; });
     $('salesBreakdown').classList.add('hidden'); $('storageWarn').classList.add('hidden');
@@ -3076,7 +3467,7 @@ const Auth = {
   },
   unsentNote() {
     const n = Outbox.mine().length;
-    return n ? ' ' + n + (n === 1 ? ' sale is' : ' sales are') + ' saved on this phone and will be sent after you sign in.' : '';
+    return n ? ' ' + n + (n === 1 ? ' sale/payment is' : ' sales/payments are') + ' saved on this phone and will be sent after you sign in.' : '';
   },
   expire(msg) { if (!S.token) return; const t = S.token, note = this.unsentNote(); this.reset(); api('logout', t).catch(() => {}); this.error((msg || 'Session expired. Please sign in again.') + note); },
   logout() { const t = S.token, note = this.unsentNote(); this.reset(); if (t) api('logout', t).catch(() => {}); toast('Logged out.' + note); }
